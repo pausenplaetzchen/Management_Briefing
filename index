@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PausenPlätzchen Management Briefing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+        }
+        
+        @media (max-width: 480px) {
+            html {
+                font-size: 14px;
+            }
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #1a1a1a;
+                --bg-secondary: #2d2d2d;
+                --bg-tertiary: #0f0f0f;
+                --text-primary: #ffffff;
+                --text-secondary: #b0b0b0;
+                --text-tertiary: #808080;
+                --border-color: #404040;
+                --success-bg: #1a3d1a;
+                --success-text: #4ade80;
+                --warning-bg: #3d3d1a;
+                --warning-text: #fbbf24;
+                --danger-bg: #3d1a1a;
+                --danger-text: #f87171;
+                --info-bg: #1a2d3d;
+                --info-text: #60a5fa;
+            }
+        }
+        
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-primary: #ffffff;
+                --bg-secondary: #f5f5f5;
+                --bg-tertiary: #fafafa;
+                --text-primary: #1a1a1a;
+                --text-secondary: #666666;
+                --text-tertiary: #999999;
+                --border-color: #e0e0e0;
+                --success-bg: #e6f4ea;
+                --success-text: #137333;
+                --warning-bg: #fef3c7;
+                --warning-text: #854f0b;
+                --danger-bg: #fee2e2;
+                --danger-text: #be123c;
+                --info-bg: #dbeafe;
+                --info-text: #1e40af;
+            }
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #185FA5;
+        }
+        
+        .header .timestamp {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .container {
+            max-width: 50rem;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        .section {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            margin: 0;
+        }
+        
+        .section-toggle {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+        }
+        
+        .section-toggle:hover {
+            background: var(--bg-secondary);
+        }
+        
+        .section-toggle.open {
+            background: var(--bg-secondary);
+        }
+        
+        .toggle-icon {
+            display: inline-block;
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-icon.open {
+            transform: rotate(180deg);
+        }
+        
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .section-content.open {
+            max-height: 3000px;
+        }
+        
+        .section-body {
+            padding: 1rem;
+        }
+        
+        .executive-summary {
+            background: linear-gradient(135deg, rgba(24,95,165,0.08) 0%, rgba(24,95,165,0.02) 100%);
+            border-left: 4px solid #185FA5;
+        }
+        
+        .executive-summary-content {
+            padding: 1rem;
+        }
+        
+        .executive-summary p {
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .summary-points {
+            background: var(--bg-secondary);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        
+        .summary-point {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .summary-point:last-child {
+            margin-bottom: 0;
+        }
+        
+        .summary-point-icon {
+            margin-right: 0.5rem;
+            margin-top: 0.125rem;
+            flex-shrink: 0;
+        }
+        
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid #185FA5;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #185FA5;
+        }
+        
+        .stat-subtext {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-top: 0.25rem;
+        }
+        
+        .item {
+            background: var(--bg-secondary);
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            margin-bottom: 0.625rem;
+            border-left: 3px solid #185FA5;
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.375rem;
+        }
+        
+        .item-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        
+        .item-badge {
+            background: var(--info-bg);
+            color: var(--info-text);
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .item-badge.success {
+            background: var(--success-bg);
+            color: var(--success-text);
+        }
+        
+        .item-badge.warning {
+            background: var(--warning-bg);
+            color: var(--warning-text);
+        }
+        
+        .item-badge.danger {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+        }
+        
+        .item-detail {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        
+        .item-detail strong {
+            color: var(--text-primary);
+        }
+        
+        .footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 PausenPlätzchen Management Briefing</h1>
+            <div class="timestamp">27. Mai 2026 • 18:50 Uhr (Live-Scan)</div>
+        </div>
+        
+        <div class="section">
+            <div class="section-toggle open" onclick="toggleSection(this, 'summary')">
+                <span>📋 Executive Summary</span>
+                <span class="toggle-icon open">▼</span>
+            </div>
+            <div class="section-content open" id="summary">
+                <div class="executive-summary">
+                    <div class="executive-summary-content">
+                        <p><strong>Status:</strong> ✅ Operativ stabil. 13 neue Reservierungen in 24h, signifikante Zahlungsaktivität (Lohn/Versicherungen), 1 Bewerbung eingegangen.</p>
+                        
+                        <div class="summary-points">
+                            <div class="summary-point">
+                                <span class="summary-point-icon">🔴</span>
+                                <span><strong>Aktion erforderlich:</strong> Rechnungsdaten von CITTI (5x empfangen) - Verifikation notwendig</span>
+                            </div>
+                            <div class="summary-point">
+                                <span class="summary-point-icon">💚</span>
+                                <span><strong>Einnahmen:</strong> +2.664,50 € (27.05., 08:34 Uhr)</span>
+                            </div>
+                            <div class="summary-point">
+                                <span class="summary-point-icon">📅</span>
+                                <span><strong>Peak Booking:</strong> 7 Reservierungen für Juni</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-toggle" onclick="toggleSection(this, 'reservations')">
+                <span>📅 Reservierungen (Nächste 7 Tage)</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content" id="reservations">
+                <div class="section-body">
+                    <div class="stat-card">
+                        <div class="stat-label">Neue Buchungen</div>
+                        <div class="stat-value">13</div>
+                        <div class="stat-subtext">= 25 Personen</div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">Do 28.5. - 4 Buchungen</div>
+                        <div class="item-detail">
+                            • 09:00 Uhr: Piorunowsky (2)<br>
+                            • 09:30 Uhr: Eckert (2)<br>
+                            • 11:00 Uhr: Werther (2)<br>
+                            • 12:00 Uhr: Berndt (2)
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">Fr 29.5. - 3 Buchungen</div>
+                        <div class="item-detail">
+                            • 09:00 Uhr: Hoffmann (2)<br>
+                            • 10:00 Uhr: Schade (3, Dekoration)<br>
+                            • 11:15 Uhr: Böcke (2)
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">So 31.5. - Roberts Party</div>
+                        <div class="item-detail">
+                            • 10:30 Uhr, 4 Personen<br>
+                            • Vorab-Bestellung: 3x Egg Benedict + Lachs, 2x Avocado
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-toggle" onclick="toggleSection(this, 'finanzen')">
+                <span>💳 Finanzen</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content" id="finanzen">
+                <div class="section-body">
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Einnahmen</div>
+                            <div class="stat-value" style="color: #3B6D11;">+€2.664</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Ausgaben</div>
+                            <div class="stat-value" style="color: #993C1D;">-€12.851</div>
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">Top Ausgaben</div>
+                        <div class="item-detail">
+                            • Techniker KK: €2.012,88<br>
+                            • Segafredo Zanetti: €1.941,41<br>
+                            • Deutsche Rente: €2.041,42<br>
+                            • CA Auto Bank: €1.254,88<br>
+                            • Berufsgenossenschaft: €1.466,88
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-toggle" onclick="toggleSection(this, 'personal')">
+                <span>👤 Personal & HR</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content" id="personal">
+                <div class="section-body">
+                    <div class="item">
+                        <div class="item-header">
+                            <div class="item-title">Neue Bewerbung</div>
+                            <span class="item-badge success">EINGANG</span>
+                        </div>
+                        <div class="item-detail">
+                            <strong>Alea Kalbus</strong><br>
+                            alea.kalbus@gmx.de<br>
+                            Position: Minijobberin Service<br>
+                            Quelle: Instagram<br>
+                            Datum: 27.05.2026 13:02 Uhr
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-toggle" onclick="toggleSection(this, 'actions')">
+                <span>⚡ KEY ACTIONS</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content" id="actions">
+                <div class="section-body">
+                    <div class="item">
+                        <div class="item-header">
+                            <div class="item-title">1. CITTI Duplikate</div>
+                            <span class="item-badge danger">P1</span>
+                        </div>
+                        <div class="item-detail">5x Rechnungsdaten → CITTI kontaktieren</div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-header">
+                            <div class="item-title">2. Roberts-Party</div>
+                            <span class="item-badge success">P2</span>
+                        </div>
+                        <div class="item-detail">So 31.5., 10:30 → Vorab-Menü vorbereiten</div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-header">
+                            <div class="item-title">3. Alea Kalbus</div>
+                            <span class="item-badge success">P3</span>
+                        </div>
+                        <div class="item-detail">Interview vereinbaren (alea.kalbus@gmx.de)</div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-header">
+                            <div class="item-title">4. Lieferungen</div>
+                            <span class="item-badge success">P4</span>
+                        </div>
+                        <div class="item-detail">Do/Fr bestätigen: Onlineshop, CITTI, Chef's Culinar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-toggle" onclick="toggleSection(this, 'stats')">
+                <span>📈 KPI Dashboard</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content" id="stats">
+                <div class="section-body">
+                    <div class="item">
+                        <div class="item-detail">
+                            📧 Email-Volumen: 42 Threads<br>
+                            📅 Reservierungen: 13 (25 Personen)<br>
+                            💳 Zahlungstransaktionen: 22<br>
+                            📊 Durchschnitt pro Tag: 3,7 Buchungen
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>📊 Management Briefing v2.1 • Live-Scan: 27. Mai 2026 • 18:50 Uhr</p>
+            <p>✅ Fully Interactive • Dark Mode • Mobile Optimized</p>
+        </div>
+    </div>
+    
+    <script>
+        function toggleSection(button, id) {
+            const content = document.getElementById(id);
+            const icon = button.querySelector('.toggle-icon');
+            
+            content.classList.toggle('open');
+            button.classList.toggle('open');
+            icon.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
+Fertig
