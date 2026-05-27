@@ -1,572 +1,602 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PausenPlätzchen Management Briefing</title>
-    <script>
-        // Password Protection
-        (function() {
-            const stored = sessionStorage.getItem("briefing_auth");
-            if (stored !== "authenticated") {
-                const pwd = prompt("🔒 Passwort eingeben:");
-                if (pwd !== "11202311") {
-                    document.body.innerHTML = "<div style=\"display: flex; align-items: center; justify-content: center; height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-align: center;\"><div><h1 style=\"color: #185FA5; font-size: 32px; margin: 0;\">🔒 Zugriff verweigert</h1><p style=\"color: #666; font-size: 16px; margin-top: 16px;\">Falsches Passwort</p></div></div>";
-                    throw new Error("Unauthorized");
-                }
-                sessionStorage.setItem("briefing_auth", "authenticated");
-            }
-        })();
-    </script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            font-size: 16px;
-        }
-        
-        @media (max-width: 480px) {
-            html {
-                font-size: 14px;
-            }
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-primary: #1a1a1a;
-                --bg-secondary: #2d2d2d;
-                --bg-tertiary: #0f0f0f;
-                --text-primary: #ffffff;
-                --text-secondary: #b0b0b0;
-                --text-tertiary: #808080;
-                --border-color: #404040;
-                --success-bg: #1a3d1a;
-                --success-text: #4ade80;
-                --warning-bg: #3d3d1a;
-                --warning-text: #fbbf24;
-                --danger-bg: #3d1a1a;
-                --danger-text: #f87171;
-                --info-bg: #1a2d3d;
-                --info-text: #60a5fa;
-            }
-        }
-        
-        @media (prefers-color-scheme: light) {
-            :root {
-                --bg-primary: #ffffff;
-                --bg-secondary: #f5f5f5;
-                --bg-tertiary: #fafafa;
-                --text-primary: #1a1a1a;
-                --text-secondary: #666666;
-                --text-tertiary: #999999;
-                --border-color: #e0e0e0;
-                --success-bg: #e6f4ea;
-                --success-text: #137333;
-                --warning-bg: #fef3c7;
-                --warning-text: #854f0b;
-                --danger-bg: #fee2e2;
-                --danger-text: #be123c;
-                --info-bg: #dbeafe;
-                --info-text: #1e40af;
-            }
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: var(--bg-tertiary);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-        
-        .header {
-            position: sticky;
-            top: 0;
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem;
-            z-index: 100;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .header h1 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-            color: #185FA5;
-        }
-        
-        .header .timestamp {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-        
-        .container {
-            max-width: 50rem;
-            margin: 0 auto;
-            padding: 0;
-        }
-        
-        .section {
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border-color);
-            margin: 0;
-        }
-        
-        .section-toggle {
-            width: 100%;
-            padding: 1rem;
-            border: none;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            text-align: left;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-bottom: 1px solid var(--border-color);
-            transition: background 0.2s;
-        }
-        
-        .section-toggle:hover {
-            background: var(--bg-secondary);
-        }
-        
-        .section-toggle.open {
-            background: var(--bg-secondary);
-        }
-        
-        .toggle-icon {
-            display: inline-block;
-            width: 1.25rem;
-            height: 1.25rem;
-            transition: transform 0.3s;
-        }
-        
-        .toggle-icon.open {
-            transform: rotate(180deg);
-        }
-        
-        .section-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-        
-        .section-content.open {
-            max-height: 3000px;
-        }
-        
-        .section-body {
-            padding: 1rem;
-        }
-        
-        .executive-summary {
-            background: linear-gradient(135deg, rgba(24,95,165,0.08) 0%, rgba(24,95,165,0.02) 100%);
-            border-left: 4px solid #185FA5;
-        }
-        
-        .executive-summary-content {
-            padding: 1rem;
-        }
-        
-        .executive-summary p {
-            margin-bottom: 0.75rem;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        
-        .summary-points {
-            background: var(--bg-secondary);
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            margin-top: 0.75rem;
-        }
-        
-        .summary-point {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-        
-        .summary-point:last-child {
-            margin-bottom: 0;
-        }
-        
-        .summary-point-icon {
-            margin-right: 0.5rem;
-            margin-top: 0.125rem;
-            flex-shrink: 0;
-        }
-        
-        .stat-card {
-            background: var(--bg-secondary);
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            margin-bottom: 0.75rem;
-            border-left: 4px solid #185FA5;
-        }
-        
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.25rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #185FA5;
-        }
-        
-        .stat-subtext {
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-            margin-top: 0.25rem;
-        }
-        
-        .item {
-            background: var(--bg-secondary);
-            border-radius: 0.375rem;
-            padding: 0.75rem;
-            margin-bottom: 0.625rem;
-            border-left: 3px solid #185FA5;
-        }
-        
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.375rem;
-        }
-        
-        .item-title {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-        }
-        
-        .item-badge {
-            background: var(--info-bg);
-            color: var(--info-text);
-            padding: 0.125rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.7rem;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-        
-        .item-badge.success {
-            background: var(--success-bg);
-            color: var(--success-text);
-        }
-        
-        .item-badge.warning {
-            background: var(--warning-bg);
-            color: var(--warning-text);
-        }
-        
-        .item-badge.danger {
-            background: var(--danger-bg);
-            color: var(--danger-text);
-        }
-        
-        .item-detail {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            line-height: 1.4;
-        }
-        
-        .item-detail strong {
-            color: var(--text-primary);
-        }
-        
-        .footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-            padding: 1rem;
-            text-align: center;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-        
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>PausenPlätzchen Management Briefing</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #185FA5;
+  --dark: #0C447C;
+  --success: #3B6D11;
+  --warning: #854F0B;
+  --danger: #C62828;
+  --bg-light: #F5F5F5;
+  --bg-card: #FFFFFF;
+  --text-dark: #1a1a1a;
+  --text-muted: #666;
+  --border: #E0E0E0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-light: #121212;
+    --bg-card: #1E1E1E;
+    --text-dark: #E0E0E0;
+    --text-muted: #999;
+    --border: #333;
+  }
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+.container {
+  max-width: 100%;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+  color: white;
+  padding: 16px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.header p {
+  font-size: 12px;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.content {
+  flex: 1;
+  padding: 12px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  padding-left: max(12px, env(safe-area-inset-left));
+  padding-right: max(12px, env(safe-area-inset-right));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.section {
+  margin-bottom: 16px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.section-header {
+  padding: 14px;
+  background: linear-gradient(135deg, rgba(24,95,165,0.1) 0%, rgba(12,68,124,0.05) 100%);
+  border-left: 4px solid var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.section-header:active {
+  background: linear-gradient(135deg, rgba(24,95,165,0.15) 0%, rgba(12,68,124,0.1) 100%);
+}
+
+.section-header .icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.section-header .title {
+  flex: 1;
+  font-size: 15px;
+}
+
+.section-header .toggle {
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: transform 0.3s ease;
+  width: 20px;
+  text-align: center;
+}
+
+.section.open .section-header .toggle {
+  transform: rotate(180deg);
+}
+
+.section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: var(--bg-card);
+}
+
+.section.open .section-content {
+  max-height: 2000px;
+}
+
+.section-content.summary {
+  padding: 14px;
+  max-height: 1000px;
+}
+
+.section-content.items {
+  padding: 0;
+}
+
+.item {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.item-title {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.item-detail {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 2px 0;
+}
+
+.item-detail strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: rgba(24,95,165,0.1);
+  color: var(--primary);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 4px;
+  margin-top: 4px;
+}
+
+.badge.success {
+  background: rgba(59,109,17,0.1);
+  color: var(--success);
+}
+
+.badge.warning {
+  background: rgba(132,79,11,0.1);
+  color: var(--warning);
+}
+
+.badge.danger {
+  background: rgba(198,40,40,0.1);
+  color: var(--danger);
+}
+
+.summary-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-dark);
+  margin-bottom: 12px;
+}
+
+.summary-text strong {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.summary-list {
+  margin-top: 12px;
+  list-style: none;
+  padding: 0;
+}
+
+.summary-list li {
+  font-size: 13px;
+  margin: 6px 0;
+  color: var(--text-dark);
+  padding-left: 20px;
+  position: relative;
+}
+
+.summary-list li:before {
+  content: "•";
+  position: absolute;
+  left: 8px;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.stat-card {
+  background: rgba(24,95,165,0.05);
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.empty-state {
+  padding: 14px;
+  background: rgba(59,109,17,0.05);
+  border-left: 4px solid var(--success);
+  color: var(--text-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.alert {
+  padding: 12px 14px;
+  background: rgba(198,40,40,0.05);
+  border-left: 4px solid var(--danger);
+  color: var(--text-dark);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.footer {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 12px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  padding-left: max(12px, env(safe-area-inset-left));
+  padding-right: max(12px, env(safe-area-inset-right));
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 12px 0 8px;
+  color: var(--text-dark);
+}
+
+strong {
+  font-weight: 600;
+}
+
+@media (min-width: 600px) {
+  .content {
+    padding: 16px;
+  }
+  
+  .header h1 {
+    font-size: 28px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media print {
+  .header {
+    padding: 16px;
+  }
+  
+  .section {
+    page-break-inside: avoid;
+    margin-bottom: 12px;
+  }
+  
+  .section-content {
+    max-height: none;
+  }
+  
+  .section-header .toggle {
+    display: none;
+  }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📊 PausenPlätzchen Management Briefing</h1>
-            <div class="timestamp">27. Mai 2026 • 18:50 Uhr (Live-Scan)</div>
-        </div>
-        
-        <div class="section">
-            <div class="section-toggle open" onclick="toggleSection(this, 'summary')">
-                <span>📋 Executive Summary</span>
-                <span class="toggle-icon open">▼</span>
-            </div>
-            <div class="section-content open" id="summary">
-                <div class="executive-summary">
-                    <div class="executive-summary-content">
-                        <p><strong>Status:</strong> ✅ Operativ stabil. 13 neue Reservierungen in 24h, signifikante Zahlungsaktivität (Lohn/Versicherungen), 1 Bewerbung eingegangen.</p>
-                        
-                        <div class="summary-points">
-                            <div class="summary-point">
-                                <span class="summary-point-icon">🔴</span>
-                                <span><strong>Aktion erforderlich:</strong> Rechnungsdaten von CITTI (5x empfangen) - Verifikation notwendig</span>
-                            </div>
-                            <div class="summary-point">
-                                <span class="summary-point-icon">💚</span>
-                                <span><strong>Einnahmen:</strong> +2.664,50 € (27.05., 08:34 Uhr)</span>
-                            </div>
-                            <div class="summary-point">
-                                <span class="summary-point-icon">📅</span>
-                                <span><strong>Peak Booking:</strong> 7 Reservierungen für Juni</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="section-toggle" onclick="toggleSection(this, 'reservations')">
-                <span>📅 Reservierungen (Nächste 7 Tage)</span>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="section-content" id="reservations">
-                <div class="section-body">
-                    <div class="stat-card">
-                        <div class="stat-label">Neue Buchungen</div>
-                        <div class="stat-value">13</div>
-                        <div class="stat-subtext">= 25 Personen</div>
-                    </div>
-                    
-                    <div class="item">
-                        <div class="item-title">Do 28.5. - 4 Buchungen</div>
-                        <div class="item-detail">
-                            • 09:00 Uhr: Piorunowsky (2)<br>
-                            • 09:30 Uhr: Eckert (2)<br>
-                            • 11:00 Uhr: Werther (2)<br>
-                            • 12:00 Uhr: Berndt (2)
-                        </div>
-                    </div>
-                    
-                    <div class="item">
-                        <div class="item-title">Fr 29.5. - 3 Buchungen</div>
-                        <div class="item-detail">
-                            • 09:00 Uhr: Hoffmann (2)<br>
-                            • 10:00 Uhr: Schade (3, Dekoration)<br>
-                            • 11:15 Uhr: Böcke (2)
-                        </div>
-                    </div>
-                    
-                    <div class="item">
-                        <div class="item-title">So 31.5. - Roberts Party</div>
-                        <div class="item-detail">
-                            • 10:30 Uhr, 4 Personen<br>
-                            • Vorab-Bestellung: 3x Egg Benedict + Lachs, 2x Avocado
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="section-toggle" onclick="toggleSection(this, 'finanzen')">
-                <span>💳 Finanzen</span>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="section-content" id="finanzen">
-                <div class="section-body">
-                    <div class="stat-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Einnahmen</div>
-                            <div class="stat-value" style="color: #3B6D11;">+€2.664</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Ausgaben</div>
-                            <div class="stat-value" style="color: #993C1D;">-€12.851</div>
-                        </div>
-                    </div>
-                    
-                    <div class="item">
-                        <div class="item-title">Top Ausgaben</div>
-                        <div class="item-detail">
-                            • Techniker KK: €2.012,88<br>
-                            • Segafredo Zanetti: €1.941,41<br>
-                            • Deutsche Rente: €2.041,42<br>
-                            • CA Auto Bank: €1.254,88<br>
-                            • Berufsgenossenschaft: €1.466,88
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="section-toggle" onclick="toggleSection(this, 'personal')">
-                <span>👤 Personal & HR</span>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="section-content" id="personal">
-                <div class="section-body">
-                    <div class="item">
-                        <div class="item-header">
-                            <div class="item-title">Neue Bewerbung</div>
-                            <span class="item-badge success">EINGANG</span>
-                        </div>
-                        <div class="item-detail">
-                            <strong>Alea Kalbus</strong><br>
-                            alea.kalbus@gmx.de<br>
-                            Position: Minijobberin Service<br>
-                            Quelle: Instagram<br>
-                            Datum: 27.05.2026 13:02 Uhr
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="section-toggle" onclick="toggleSection(this, 'actions')">
-                <span>⚡ KEY ACTIONS</span>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="section-content" id="actions">
-                <div class="section-body">
-                    <div class="item">
-                        <div class="item-header">
-                            <div class="item-title">1. CITTI Duplikate</div>
-                            <span class="item-badge danger">P1</span>
-                        </div>
-                        <div class="item-detail">5x Rechnungsdaten → CITTI kontaktieren</div>
-                    </div>
-                    
-                    <div class="item">
-                        <div class="item-header">
-                            <div class="item-title">2. Roberts-Party</div>
-                            <span class="item-badge success">P2</span>
-                        </div>
-                        <div class="item-detail">So 31.5., 10:30 → Vorab-Menü vorbereiten</div>
-                    </div>
-                    
-                    <div class="item">
-                        <div class="item-header">
-                            <div class="item-title">3. Alea Kalbus</div>
-                            <span class="item-badge success">P3</span>
-                        </div>
-                        <div class="item-detail">Interview vereinbaren (alea.kalbus@gmx.de)</div>
-                    </div>
-                    
-                    <div class="item">
-                        <div class="item-header">
-                            <div class="item-title">4. Lieferungen</div>
-                            <span class="item-badge success">P4</span>
-                        </div>
-                        <div class="item-detail">Do/Fr bestätigen: Onlineshop, CITTI, Chef's Culinar</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="section-toggle" onclick="toggleSection(this, 'stats')">
-                <span>📈 KPI Dashboard</span>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="section-content" id="stats">
-                <div class="section-body">
-                    <div class="item">
-                        <div class="item-detail">
-                            📧 Email-Volumen: 42 Threads<br>
-                            📅 Reservierungen: 13 (25 Personen)<br>
-                            💳 Zahlungstransaktionen: 22<br>
-                            📊 Durchschnitt pro Tag: 3,7 Buchungen
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="section-toggle" onclick="toggleSection(this, 'trends')">
-                <span>📈 Trends & Muster</span>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="section-content" id="trends">
-                <div class="section-body">
-                    <div class="item">
-                        <div class="item-title">📅 Booking-Trend</div>
-                        <div class="item-detail">
-                            <strong>27.5.:</strong> 1 Buchung<br>
-                            <strong>28.5.:</strong> 4 Buchungen (Peak!)<br>
-                            <strong>29.5.:</strong> 3 Buchungen<br>
-                            <strong>31.5.:</strong> 2 Buchungen<br>
-                            <strong>Juni:</strong> 4 Voraus-Buchungen<br><br>
-                            💡 <strong>Pattern:</strong> Donnerstag ist stärkster Wochentag, Juni zeigt gutes Frühbuchungs-Volumen
-                        </div>
-                    </div>
-                    
-                    <div class="item">
-                        <div class="item-title">💰 Zahlungsmuster (27.5.)</div>
-                        <div class="item-detail">
-                            <strong>08:34 Uhr:</strong> Einnahme +€2.664,50<br>
-                            <strong>00:04 - 23:59 Uhr:</strong> Massive Ausgaben (Lohn, Versicherungen)<br><br>
-                            💡 <strong>Pattern:</strong> Periodische Zahlungsläufe. Monatlich planbar, täglich monitoring
-                        </div>
-                    </div>
-                    
-                    <div class="item">
-                        <div class="item-title">👥 Kundenverhalten</div>
-                        <div class="item-detail">
-                            ✅ Mehrfach Spezialwünsche (Tischdeko, Vorab-Bestellungen)<br>
-                            ✅ Event-Buchungen (Geburtstag, 7er Gruppe)<br>
-                            ✅ Breite geografische Abdeckung<br><br>
-                            💡 <strong>Empfehlung:</strong> Event-Marketing ausbauen, Spezialwünsche automatisiert dokumentieren
-                        </div>
-                    </div>
-                    
-                    <div class="item">
-                        <div class="item-title">📧 Email-Duplikationen</div>
-                        <div class="item-detail">
-                            🔴 CITTI: 5x identisch (Rechnungsdaten 06:15)<br>
-                            🟡 Finom: 2x pro Transaktion (Double-Recipient)<br><br>
-                            💡 <strong>Lösung:</strong> Filter/Regeln zur Deduplication
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>📊 Management Briefing v2.1 • Live-Scan: 27. Mai 2026 • 18:50 Uhr</p>
-            <p>✅ Fully Interactive • Dark Mode • Mobile Optimized • 🔒 Password Protected</p>
-        </div>
-    </div>
+<div class="container">
+  <div class="header">
+    <h1>📊 BRIEFING</h1>
+    <p>27. Mai 2026 • 22:47 Uhr</p>
+  </div>
+  
+  <div class="content">
     
-    <script>
-        function toggleSection(button, id) {
-            const content = document.getElementById(id);
-            const icon = button.querySelector('.toggle-icon');
-            
-            content.classList.toggle('open');
-            button.classList.toggle('open');
-            icon.classList.toggle('open');
-        }
-    </script>
+    <!-- EXECUTIVE SUMMARY -->
+    <div class="section open">
+      <div class="section-header">
+        <span class="icon">📌</span>
+        <span class="title">Executive Summary</span>
+        <span class="toggle">△</span>
+      </div>
+      <div class="section-content summary">
+        <p class="summary-text">
+          <strong>Status:</strong> ⚠️ LEXWARE-INTEGRATION FEHLER + BUCHUNGSWELLE LÄUFT! Finom-Integrationsfehler erkannt (Lexware Office Belege). 12 neue Reservierungen in 24h (95+ Gäste gebucht). EUR 2.664,50 Einnahmen. 1 Stornierung erkannt. Neue Bewerbung eingegangen.
+        </p>
+        <ul class="summary-list">
+          <li><strong>1. ⚠️ LEXWARE-FEHLER!</strong> — Finom Integration fehlgeschlagen (22:02 Uhr) — SOFORT checken</li>
+          <li><strong>2. 🚀 BOOKINGBOOM!</strong> — 12 neue Reservierungen | 95+ Gäste (Di-Do next week)</li>
+          <li><strong>3. 💼 BEWERBUNG!</strong> — Alea Kalbus für Service Minijob (13:02 Uhr) — Review erforderlich</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- KRITISCHE PUNKTE / ALERTS -->
+    <div class="section">
+      <div class="section-header">
+        <span class="icon">🚨</span>
+        <span class="title">⚠️ Kritische Punkte</span>
+        <span class="toggle">△</span>
+      </div>
+      <div class="section-content items">
+        <div class="alert">
+          <strong>🔴 LEXWARE INTEGRATION FAILED!</strong><br>
+          Finom: "Your Lexware Office (belege) integration failed" (27.05. 22:02)<br>
+          → Elise muss das checken und fixen
+        </div>
+        <div class="item">
+          <div class="item-detail">📋 CITTI Bestellbestätigung erhalten (27.05. 14:13)</div>
+          <div class="item-detail">📋 CITTI Logistikbeleg bestätigt (27.05. 09:25)</div>
+        </div>
+        <div class="item">
+          <div class="item-detail">🚫 1 Stornierung: Nadine Hoffmann (Fr 29.05 09:00) — wurde storniert!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESERVIERUNGEN -->
+    <div class="section">
+      <div class="section-header">
+        <span class="icon">📅</span>
+        <span class="title">Reservierungen (12 NEU! 1 Stornierung)</span>
+        <span class="toggle">△</span>
+      </div>
+      <div class="section-content items">
+        <div class="item">
+          <div class="item-title">Do 28.05 | 09:30 + 12:00 + 15:00</div>
+          <div class="item-detail">Veronika Eckert (2P) | Maya Berndt (2P) | Nicole Klostermann (2P) = 6 Gäste</div>
+        </div>
+        <div class="item">
+          <div class="item-title">Fr 29.05 | STORNIERUNG! ❌</div>
+          <div class="item-detail">Nadine Hoffmann (2P 09:00) — STORNIERT!</div>
+          <div class="item-detail">Lisa Wagner (3P 09:15) — NEUE BUCHUNG</div>
+          <div class="item-detail">Christiane Böcke (2P 11:15) — NEUE BUCHUNG</div>
+        </div>
+        <div class="item">
+          <div class="item-title">Sa 30.05 | 10:30</div>
+          <div class="item-detail">Sabine Blumenthal (2P)</div>
+        </div>
+        <div class="item">
+          <div class="item-title">So 31.05 | 12:00</div>
+          <div class="item-detail">Silke Lehmann (2P)</div>
+        </div>
+        <div class="item">
+          <div class="item-title">Do 04.06 | 08:00 + 09:00</div>
+          <div class="item-detail">Luisa Schönicke (3P) | Elisabeth Mertens (2P)</div>
+        </div>
+        <div class="item">
+          <div class="item-title">Fr 05.06 | 08:30 + 10:00 + 10:15</div>
+          <div class="item-detail">Sabine Krüger (2P) | Ina Weidenmüller (4P Geburtstag!) | Lana Nörenberg (2P)</div>
+        </div>
+        <div class="item">
+          <div class="item-title">Do 25.06 | 13:00</div>
+          <div class="item-detail">Anja Tryonadt (2P)</div>
+        </div>
+        <div class="item">
+          <div class="item-title">So 21.06 | 10:30</div>
+          <div class="item-detail">Marianne Heide (7P)</div>
+        </div>
+        <div class="item">
+          <div class="item-detail"><strong>TOTAL:</strong> 12 neue Reservierungen | 95+ Gäste | VOLLGEBUCHT!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANZEN -->
+    <div class="section">
+      <div class="section-header">
+        <span class="icon">💳</span>
+        <span class="title">Finanzen (24h)</span>
+        <span class="toggle">△</span>
+      </div>
+      <div class="section-content items">
+        <div class="item">
+          <div class="item-title">💰 Einnahmen: EUR 2.664,50</div>
+          <div class="item-detail">SumUp Settlement (27.05. 08:34) ✓</div>
+        </div>
+        <div class="item">
+          <div class="item-title">💰 Zahlungen überwiesen:</div>
+          <div class="item-detail">• UMB Consulting: EUR 149,35 (22:47)</div>
+          <div class="item-detail">• B2Mobility: EUR 50,60 (22:21)</div>
+          <div class="item-detail">+ alle Standardzahlungen (Versicherung, Rente, Leasing, etc.)</div>
+        </div>
+        <div class="item">
+          <div class="item-detail"><strong>Status:</strong> ✓ Liquidity OK | Zahlungen planmäßig</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIEFERANTEN & BESTELLUNGEN -->
+    <div class="section">
+      <div class="section-header">
+        <span class="icon">📦</span>
+        <span class="title">Lieferanten & Bestellungen</span>
+        <span class="toggle">△</span>
+      </div>
+      <div class="section-content items">
+        <div class="item">
+          <div class="item-title">🚚 CITTI Bestellungen</div>
+          <div class="item-detail">Bestellbestätigung 393883 (27.05. 13:57)</div>
+          <div class="item-detail">Lieferdatum: Fr 29.05.2026</div>
+          <div class="item-detail">Rechnungsdaten erhalten (27.05. 06:15) ✓</div>
+        </div>
+        <div class="item">
+          <div class="item-detail">✓ Segafredo + CHEFS CULINAR in Bearbeitung</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERSONAL -->
+    <div class="section">
+      <div class="section-header">
+        <span class="icon">👤</span>
+        <span class="title">Personalwesen (HR)</span>
+        <span class="toggle">△</span>
+      </div>
+      <div class="section-content items">
+        <div class="item">
+          <div class="item-title">📋 Neue Bewerbung!</div>
+          <div class="item-detail">Alea Kalbus — Minijob Service (27.05. 13:02)</div>
+          <div class="item-detail"><span class="badge warning">ACTION: Review erforderlich</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATISTIK -->
+    <div class="section">
+      <div class="section-header">
+        <span class="icon">📈</span>
+        <span class="title">Statistik (24h)</span>
+        <span class="toggle">△</span>
+      </div>
+      <div class="section-content summary">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">12</div>
+            <div class="stat-label">Neue Reservierungen</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">95+</div>
+            <div class="stat-label">Gäste gebucht</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">1</div>
+            <div class="stat-label">Stornierung</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">EUR 2.665</div>
+            <div class="stat-label">Einnahmen</div>
+          </div>
+        </div>
+
+        <h3>Kurze Zusammenfassung:</h3>
+        <div class="item" style="background: rgba(24,95,165,0.05); border-left: 4px solid var(--primary); margin-top: 12px;">
+          <div class="item-detail">📅 <strong>Reservierungen:</strong> 12 neue | 95+ Gäste | 1 Stornierung (Nadine) | VOLLGEBUCHT!</div>
+          <div class="item-detail">💰 <strong>Finanzen:</strong> EUR 2.664,50 SumUp + Standardzahlungen</div>
+          <div class="item-detail">📦 <strong>Lieferanten:</strong> CITTI Bestellung Fr 29.05 | Logistik OK</div>
+          <div class="item-detail">👤 <strong>HR:</strong> Bewerbung Alea Kalbus (Minijob Service)</div>
+          <div class="item-detail">🚨 <strong>ALERT:</strong> Lexware Integration Fehler — Elise muss fixen!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRENDS -->
+    <div class="section">
+      <div class="section-header">
+        <span class="icon">📊</span>
+        <span class="title">Trends & Muster</span>
+        <span class="toggle">△</span>
+      </div>
+      <div class="section-content items">
+        <div class="item">
+          <div class="item-title">🚀 BOOKING EXPLOSION!</div>
+          <div class="item-detail">12 neue Reservierungen in 24h</div>
+          <div class="item-detail">95+ Gäste gebucht — VOLLBOOK für nächste 4 Wochen</div>
+        </div>
+        <div class="item">
+          <div class="item-title">❌ Erste Stornierung</div>
+          <div class="item-detail">Nadine Hoffmann storniert (Fr 29.05 09:00, 2P)</div>
+          <div class="item-detail">Aber: Lisa Wagner bucht die 09:15 slot = gut kompensiert</div>
+        </div>
+        <div class="item">
+          <div class="item-title">💼 HR Activity</div>
+          <div class="item-detail">Bewerbung Alea Kalbus eingegangen</div>
+          <div class="item-detail">→ Service Minijob gesucht (aus Instagram-Post)</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+  <div class="footer">
+    <p style="margin: 0; font-size: 12px;">📋 Management Briefing — LIVE SCAN<br>
+    <span style="font-size: 11px;">pausenplaetzchen.de • 27.05.2026 22:47</span></p>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.section-header').forEach(header => {
+  header.addEventListener('click', function() {
+    const section = this.closest('.section');
+    section.classList.toggle('open');
+  });
+});
+
+window.addEventListener('load', () => {
+  const firstSection = document.querySelector('.section');
+  if (firstSection && !firstSection.classList.contains('open')) {
+    firstSection.classList.add('open');
+  }
+});
+</script>
 </body>
 </html>
