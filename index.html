@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PausenPlätzchen Management Briefing</title>
+    <script>
+        // Password Protection
+        (function() {
+            const stored = sessionStorage.getItem("briefing_auth");
+            if (stored !== "authenticated") {
+                const pwd = prompt("🔒 Passwort eingeben:");
+                if (pwd !== "11202311") {
+                    document.body.innerHTML = "<div style=\"display: flex; align-items: center; justify-content: center; height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-align: center;\"><div><h1 style=\"color: #185FA5; font-size: 32px; margin: 0;\">🔒 Zugriff verweigert</h1><p style=\"color: #666; font-size: 16px; margin-top: 16px;\">Falsches Passwort</p></div></div>";
+                    throw new Error("Unauthorized");
+                }
+                sessionStorage.setItem("briefing_auth", "authenticated");
+            }
+        })();
+    </script>
     <style>
         * {
             margin: 0;
@@ -488,9 +502,59 @@
             </div>
         </div>
         
+        <div class="section">
+            <div class="section-toggle" onclick="toggleSection(this, 'trends')">
+                <span>📈 Trends & Muster</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content" id="trends">
+                <div class="section-body">
+                    <div class="item">
+                        <div class="item-title">📅 Booking-Trend</div>
+                        <div class="item-detail">
+                            <strong>27.5.:</strong> 1 Buchung<br>
+                            <strong>28.5.:</strong> 4 Buchungen (Peak!)<br>
+                            <strong>29.5.:</strong> 3 Buchungen<br>
+                            <strong>31.5.:</strong> 2 Buchungen<br>
+                            <strong>Juni:</strong> 4 Voraus-Buchungen<br><br>
+                            💡 <strong>Pattern:</strong> Donnerstag ist stärkster Wochentag, Juni zeigt gutes Frühbuchungs-Volumen
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">💰 Zahlungsmuster (27.5.)</div>
+                        <div class="item-detail">
+                            <strong>08:34 Uhr:</strong> Einnahme +€2.664,50<br>
+                            <strong>00:04 - 23:59 Uhr:</strong> Massive Ausgaben (Lohn, Versicherungen)<br><br>
+                            💡 <strong>Pattern:</strong> Periodische Zahlungsläufe. Monatlich planbar, täglich monitoring
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">👥 Kundenverhalten</div>
+                        <div class="item-detail">
+                            ✅ Mehrfach Spezialwünsche (Tischdeko, Vorab-Bestellungen)<br>
+                            ✅ Event-Buchungen (Geburtstag, 7er Gruppe)<br>
+                            ✅ Breite geografische Abdeckung<br><br>
+                            💡 <strong>Empfehlung:</strong> Event-Marketing ausbauen, Spezialwünsche automatisiert dokumentieren
+                        </div>
+                    </div>
+                    
+                    <div class="item">
+                        <div class="item-title">📧 Email-Duplikationen</div>
+                        <div class="item-detail">
+                            🔴 CITTI: 5x identisch (Rechnungsdaten 06:15)<br>
+                            🟡 Finom: 2x pro Transaktion (Double-Recipient)<br><br>
+                            💡 <strong>Lösung:</strong> Filter/Regeln zur Deduplication
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="footer">
             <p>📊 Management Briefing v2.1 • Live-Scan: 27. Mai 2026 • 18:50 Uhr</p>
-            <p>✅ Fully Interactive • Dark Mode • Mobile Optimized</p>
+            <p>✅ Fully Interactive • Dark Mode • Mobile Optimized • 🔒 Password Protected</p>
         </div>
     </div>
     
@@ -506,4 +570,3 @@
     </script>
 </body>
 </html>
-Fertig
