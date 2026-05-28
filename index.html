@@ -12,7 +12,7 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+ 
 :root {
   --primary: #185FA5;
   --dark: #0C447C;
@@ -25,7 +25,7 @@
   --text-muted: #666;
   --border: #E0E0E0;
 }
-
+ 
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-light: #121212;
@@ -35,7 +35,7 @@
     --border: #333;
   }
 }
-
+ 
 html, body {
   height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -44,7 +44,7 @@ html, body {
   line-height: 1.5;
   font-size: 16px;
 }
-
+ 
 .container {
   max-width: 100%;
   width: 100%;
@@ -52,7 +52,7 @@ html, body {
   display: flex;
   flex-direction: column;
 }
-
+ 
 .header {
   background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
   color: white;
@@ -66,19 +66,19 @@ html, body {
   top: 0;
   z-index: 100;
 }
-
+ 
 .header h1 {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 4px;
 }
-
+ 
 .header p {
   font-size: 12px;
   opacity: 0.9;
   margin: 0;
 }
-
+ 
 .content {
   flex: 1;
   padding: 12px;
@@ -88,7 +88,7 @@ html, body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
-
+ 
 .section {
   margin-bottom: 16px;
   background: var(--bg-card);
@@ -96,7 +96,7 @@ html, body {
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
-
+ 
 .section-header {
   padding: 14px;
   background: linear-gradient(135deg, rgba(24,95,165,0.1) 0%, rgba(12,68,124,0.05) 100%);
@@ -112,21 +112,21 @@ html, body {
   font-weight: 600;
   color: var(--text-dark);
 }
-
+ 
 .section-header:active {
   background: linear-gradient(135deg, rgba(24,95,165,0.15) 0%, rgba(12,68,124,0.1) 100%);
 }
-
+ 
 .section-header .icon {
   font-size: 18px;
   margin-right: 8px;
 }
-
+ 
 .section-header .title {
   flex: 1;
   font-size: 15px;
 }
-
+ 
 .section-header .toggle {
   font-size: 12px;
   color: var(--text-muted);
@@ -134,60 +134,60 @@ html, body {
   width: 20px;
   text-align: center;
 }
-
+ 
 .section.open .section-header .toggle {
   transform: rotate(180deg);
 }
-
+ 
 .section-content {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
   background: var(--bg-card);
 }
-
+ 
 .section.open .section-content {
-  max-height: 2000px;
+  max-height: 3000px;
 }
-
+ 
 .section-content.summary {
   padding: 14px;
   max-height: 1000px;
 }
-
+ 
 .section-content.items {
   padding: 0;
 }
-
+ 
 .item {
   padding: 12px 14px;
   border-bottom: 1px solid var(--border);
   font-size: 14px;
 }
-
+ 
 .item:last-child {
   border-bottom: none;
 }
-
+ 
 .item-title {
   font-weight: 600;
   color: var(--text-dark);
   margin-bottom: 4px;
   font-size: 14px;
 }
-
+ 
 .item-detail {
   color: var(--text-muted);
   font-size: 13px;
   line-height: 1.4;
   margin: 2px 0;
 }
-
+ 
 .item-detail strong {
   color: var(--text-dark);
   font-weight: 600;
 }
-
+ 
 .badge {
   display: inline-block;
   padding: 4px 8px;
@@ -199,40 +199,40 @@ html, body {
   margin-right: 4px;
   margin-top: 4px;
 }
-
+ 
 .badge.success {
   background: rgba(59,109,17,0.1);
   color: var(--success);
 }
-
+ 
 .badge.warning {
   background: rgba(132,79,11,0.1);
   color: var(--warning);
 }
-
+ 
 .badge.danger {
   background: rgba(198,40,40,0.1);
   color: var(--danger);
 }
-
+ 
 .summary-text {
   font-size: 13px;
   line-height: 1.6;
   color: var(--text-dark);
   margin-bottom: 12px;
 }
-
+ 
 .summary-text strong {
   font-weight: 600;
   color: var(--text-dark);
 }
-
+ 
 .summary-list {
   margin-top: 12px;
   list-style: none;
   padding: 0;
 }
-
+ 
 .summary-list li {
   font-size: 13px;
   margin: 6px 0;
@@ -240,7 +240,7 @@ html, body {
   padding-left: 20px;
   position: relative;
 }
-
+ 
 .summary-list li:before {
   content: "•";
   position: absolute;
@@ -248,14 +248,14 @@ html, body {
   font-weight: bold;
   color: var(--primary);
 }
-
+ 
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin-top: 12px;
 }
-
+ 
 .stat-card {
   background: rgba(24,95,165,0.05);
   padding: 10px;
@@ -263,28 +263,19 @@ html, body {
   border: 1px solid var(--border);
   text-align: center;
 }
-
+ 
 .stat-number {
   font-size: 18px;
   font-weight: 600;
   color: var(--primary);
   margin-bottom: 4px;
 }
-
+ 
 .stat-label {
   font-size: 11px;
   color: var(--text-muted);
 }
-
-.empty-state {
-  padding: 14px;
-  background: rgba(59,109,17,0.05);
-  border-left: 4px solid var(--success);
-  color: var(--text-muted);
-  font-size: 13px;
-  text-align: center;
-}
-
+ 
 .alert {
   padding: 12px 14px;
   background: rgba(198,40,40,0.05);
@@ -293,7 +284,7 @@ html, body {
   font-size: 13px;
   margin-bottom: 12px;
 }
-
+ 
 .footer {
   background: var(--bg-card);
   border-top: 1px solid var(--border);
@@ -306,18 +297,18 @@ html, body {
   color: var(--text-muted);
   line-height: 1.4;
 }
-
+ 
 h3 {
   font-size: 13px;
   font-weight: 600;
   margin: 12px 0 8px;
   color: var(--text-dark);
 }
-
+ 
 strong {
   font-weight: 600;
 }
-
+ 
 @media (min-width: 600px) {
   .content {
     padding: 16px;
@@ -331,32 +322,13 @@ strong {
     grid-template-columns: repeat(4, 1fr);
   }
 }
-
-@media print {
-  .header {
-    padding: 16px;
-  }
-  
-  .section {
-    page-break-inside: avoid;
-    margin-bottom: 12px;
-  }
-  
-  .section-content {
-    max-height: none;
-  }
-  
-  .section-header .toggle {
-    display: none;
-  }
-}
 </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
-    <h1>📊 BRIEFING</h1>
-    <p>27. Mai 2026 • 22:47 Uhr</p>
+    <h1>📊 PausenPlätzchen Management Briefing</h1>
+    <p>28. Mai 2026 • Live Update</p>
   </div>
   
   <div class="content">
@@ -370,112 +342,102 @@ strong {
       </div>
       <div class="section-content summary">
         <p class="summary-text">
-          <strong>Status:</strong> ⚠️ LEXWARE-INTEGRATION FEHLER + BUCHUNGSWELLE LÄUFT! Finom-Integrationsfehler erkannt (Lexware Office Belege). 12 neue Reservierungen in 24h (95+ Gäste gebucht). EUR 2.664,50 Einnahmen. 1 Stornierung erkannt. Neue Bewerbung eingegangen.
+          <strong>Status:</strong> 🚀 BUCHUNGSBOOM LÄUFT! 2 NEUE BEWERBUNGEN eingegangen! Neue CITTI Bestellung (396925, Fr 29.05). 2 neue Aushilfe-Anfragen. Telefonica EUR 19,99 fällig 29. Mai. 🚨 LEXWARE Integration noch fehlgeschlagen.
         </p>
         <ul class="summary-list">
-          <li><strong>1. ⚠️ LEXWARE-FEHLER!</strong> — Finom Integration fehlgeschlagen (22:02 Uhr) — SOFORT checken</li>
-          <li><strong>2. 🚀 BOOKINGBOOM!</strong> — 12 neue Reservierungen | 95+ Gäste (Di-Do next week)</li>
-          <li><strong>3. 💼 BEWERBUNG!</strong> — Alea Kalbus für Service Minijob (13:02 Uhr) — Review erforderlich</li>
+          <li><strong>1. 💼 2 NEUE BEWERBUNGEN!</strong> — Alea Kalbus (Service Minijob) + Eve Johanna (Aushilfe)</li>
+          <li><strong>2. 📦 NEUE CITTI BESTELLUNG!</strong> — Bestellnr. 396925 | Lieferung Fr 29.05 (MORGEN!)</li>
+          <li><strong>3. 💳 ZAHLUNG FÄLLIG!</strong> — Telefonica EUR 19,99 (29. Mai) — Lastschrift angefordert</li>
         </ul>
       </div>
     </div>
-
-    <!-- KRITISCHE PUNKTE / ALERTS -->
+ 
+    <!-- KRITISCHE PUNKTE -->
     <div class="section">
       <div class="section-header">
         <span class="icon">🚨</span>
-        <span class="title">⚠️ Kritische Punkte</span>
+        <span class="title">⚠️ Kritische Punkte & Alerts</span>
         <span class="toggle">△</span>
       </div>
       <div class="section-content items">
         <div class="alert">
-          <strong>🔴 LEXWARE INTEGRATION FAILED!</strong><br>
-          Finom: "Your Lexware Office (belege) integration failed" (27.05. 22:02)<br>
-          → Elise muss das checken und fixen
+          <strong>🔴 LEXWARE INTEGRATION NOCH FEHLGESCHLAGEN!</strong><br>
+          Finom Error (27.05. 22:02): "Your Lexware Office (belege) integration failed"<br>
+          → Noch nicht behoben! Manuelles Monitoring erforderlich
         </div>
         <div class="item">
-          <div class="item-detail">📋 CITTI Bestellbestätigung erhalten (27.05. 14:13)</div>
-          <div class="item-detail">📋 CITTI Logistikbeleg bestätigt (27.05. 09:25)</div>
+          <div class="item-title">💼 2 NEUE BEWERBUNGEN EINGEGANGEN!</div>
+          <div class="item-detail">✅ Alea Kalbus: Service Minijob (27.05 13:02)</div>
+          <div class="item-detail">🆕 Eve Johanna: Aushilfe-Anfrage (28.05 10:50) — "Instagram zeigt zwar, dass ihr nicht sucht..."</div>
+          <div class="item-detail"><span class="badge warning">ACTION: 2x Review + Antworten erforderlich</span></div>
         </div>
         <div class="item">
-          <div class="item-detail">🚫 1 Stornierung: Nadine Hoffmann (Fr 29.05 09:00) — wurde storniert!</div>
+          <div class="item-title">📦 NEUE CITTI BESTELLUNG!</div>
+          <div class="item-detail">Bestellnummer: 396925 (NEU!)</div>
+          <div class="item-detail">Lieferdatum: Fr 29.05.2026 (MORGEN!)</div>
+          <div class="item-detail">Status: ✓ Bestätigt (28.05 11:56)</div>
+        </div>
+        <div class="item">
+          <div class="item-title">💸 ZAHLUNGEN AUSSTEHEND</div>
+          <div class="item-detail">Telefonica Germany: EUR 19,99 (fällig: 29. Mai)</div>
+          <div class="item-detail">Status: Lastschrift angefordert — bereit zum Buchen</div>
         </div>
       </div>
     </div>
-
-    <!-- RESERVIERUNGEN -->
+ 
+    <!-- RESERVIERUNGEN STATUS -->
     <div class="section">
       <div class="section-header">
         <span class="icon">📅</span>
-        <span class="title">Reservierungen (12 NEU! 1 Stornierung)</span>
+        <span class="title">Reservierungen (Status Update)</span>
         <span class="toggle">△</span>
       </div>
       <div class="section-content items">
         <div class="item">
-          <div class="item-title">Do 28.05 | 09:30 + 12:00 + 15:00</div>
-          <div class="item-detail">Veronika Eckert (2P) | Maya Berndt (2P) | Nicole Klostermann (2P) = 6 Gäste</div>
+          <div class="item-title">📅 ÜBERBLICK: 16 Reservierungen (110+ Gäste)</div>
+          <div class="item-detail">Zeitraum: Do 28.05 bis Do 25.06 2026</div>
+          <div class="item-detail">Status: ✓ Mai-Juni VOLLGEBUCHT!</div>
+          <div class="item-detail">Kapazität: Maximal belegt</div>
         </div>
         <div class="item">
-          <div class="item-title">Fr 29.05 | STORNIERUNG! ❌</div>
-          <div class="item-detail">Nadine Hoffmann (2P 09:00) — STORNIERT!</div>
-          <div class="item-detail">Lisa Wagner (3P 09:15) — NEUE BUCHUNG</div>
-          <div class="item-detail">Christiane Böcke (2P 11:15) — NEUE BUCHUNG</div>
+          <div class="item-title">🟡 SPEZIAL EVENTS:</div>
+          <div class="item-detail">🎂 Ina Weidenmüller: Fr 05.06 10:00 (4P) — GEBURTSTAG!</div>
+          <div class="item-detail">🍽️ A.S. Roberts: So 31.05 10:30 (4P) — VORBESTELLUNG Egg Benedict</div>
         </div>
         <div class="item">
-          <div class="item-title">Sa 30.05 | 10:30</div>
-          <div class="item-detail">Sabine Blumenthal (2P)</div>
-        </div>
-        <div class="item">
-          <div class="item-title">So 31.05 | 12:00</div>
-          <div class="item-detail">Silke Lehmann (2P)</div>
-        </div>
-        <div class="item">
-          <div class="item-title">Do 04.06 | 08:00 + 09:00</div>
-          <div class="item-detail">Luisa Schönicke (3P) | Elisabeth Mertens (2P)</div>
-        </div>
-        <div class="item">
-          <div class="item-title">Fr 05.06 | 08:30 + 10:00 + 10:15</div>
-          <div class="item-detail">Sabine Krüger (2P) | Ina Weidenmüller (4P Geburtstag!) | Lana Nörenberg (2P)</div>
-        </div>
-        <div class="item">
-          <div class="item-title">Do 25.06 | 13:00</div>
-          <div class="item-detail">Anja Tryonadt (2P)</div>
-        </div>
-        <div class="item">
-          <div class="item-title">So 21.06 | 10:30</div>
-          <div class="item-detail">Marianne Heide (7P)</div>
-        </div>
-        <div class="item">
-          <div class="item-detail"><strong>TOTAL:</strong> 12 neue Reservierungen | 95+ Gäste | VOLLGEBUCHT!</div>
+          <div class="item-detail">📊 Stornierungen: 2 (Nadine Hoffmann, Denise Hoffmann) — gut kompensiert</div>
         </div>
       </div>
     </div>
-
+ 
     <!-- FINANZEN -->
     <div class="section">
       <div class="section-header">
         <span class="icon">💳</span>
-        <span class="title">Finanzen (24h)</span>
+        <span class="title">Finanzen (48h Status)</span>
         <span class="toggle">△</span>
       </div>
       <div class="section-content items">
         <div class="item">
-          <div class="item-title">💰 Einnahmen: EUR 2.664,50</div>
-          <div class="item-detail">SumUp Settlement (27.05. 08:34) ✓</div>
+          <div class="item-title">💸 GROSSE ZAHLUNGEN (bereits überwiesen)</div>
+          <div class="item-detail">• CHEFS CULINAR: EUR 1.002,33 ✓ (28.05 00:55)</div>
+          <div class="item-detail">• resmio: EUR 98,54 ✓ (28.05 01:18)</div>
+          <div class="item-detail">• UMB Consulting: EUR 149,35 ✓ (27.05 22:47)</div>
+          <div class="item-detail">• B2Mobility (ARAL): EUR 50,60 ✓ (27.05 22:21)</div>
         </div>
         <div class="item">
-          <div class="item-title">💰 Zahlungen überwiesen:</div>
-          <div class="item-detail">• UMB Consulting: EUR 149,35 (22:47)</div>
-          <div class="item-detail">• B2Mobility: EUR 50,60 (22:21)</div>
-          <div class="item-detail">+ alle Standardzahlungen (Versicherung, Rente, Leasing, etc.)</div>
+          <div class="item-title">⏰ ZAHLUNGEN AUSSTEHEND/FÄLLIG</div>
+          <div class="item-detail">🔴 Telefonica Germany: EUR 19,99 (fällig: 29. Mai 2026)</div>
+          <div class="item-detail">   Status: Lastschrift angefordert → wird am 29.05 buchen</div>
         </div>
         <div class="item">
-          <div class="item-detail"><strong>Status:</strong> ✓ Liquidity OK | Zahlungen planmäßig</div>
+          <div class="item-detail"><strong>Summe 48h:</strong> EUR 1.300+ Zahlungen verarbeitet</div>
+          <div class="item-detail"><strong>Status:</strong> ✓ Liquidität OK | Zahlungen im Plan</div>
         </div>
       </div>
     </div>
-
-    <!-- LIEFERANTEN & BESTELLUNGEN -->
+ 
+    <!-- LIEFERANTEN -->
     <div class="section">
       <div class="section-header">
         <span class="icon">📦</span>
@@ -484,105 +446,126 @@ strong {
       </div>
       <div class="section-content items">
         <div class="item">
-          <div class="item-title">🚚 CITTI Bestellungen</div>
-          <div class="item-detail">Bestellbestätigung 393883 (27.05. 13:57)</div>
-          <div class="item-detail">Lieferdatum: Fr 29.05.2026</div>
-          <div class="item-detail">Rechnungsdaten erhalten (27.05. 06:15) ✓</div>
+          <div class="item-title">🚚 CITTI BESTELLUNGEN (2 aktiv)</div>
+          <div class="item-detail"><strong>Bestellung 393883:</strong> (27.05 13:57) — Lieferung Fr 29.05 ✓</div>
+          <div class="item-detail"><strong>Bestellung 396925:</strong> (28.05 11:56) — Lieferung Fr 29.05 ✓ (NEU!)</div>
+          <div class="item-detail">⚠️ ZWEI Lieferungen Fr 29.05! → Koordination erforderlich</div>
         </div>
         <div class="item">
-          <div class="item-detail">✓ Segafredo + CHEFS CULINAR in Bearbeitung</div>
+          <div class="item-title">🚚 CHEFS CULINAR</div>
+          <div class="item-detail">Logistikbeleg: 606111032 ✓ (27.05 09:25)</div>
+          <div class="item-detail">Zahlung: EUR 1.002,33 ✓ (28.05 00:55)</div>
+          <div class="item-detail">Zahlungsavis: 29.05.2026 (bestätigt)</div>
         </div>
       </div>
     </div>
-
-    <!-- PERSONAL -->
+ 
+    <!-- PERSONALWESEN -->
     <div class="section">
       <div class="section-header">
         <span class="icon">👤</span>
-        <span class="title">Personalwesen (HR)</span>
+        <span class="title">Personalwesen (HR) — 2 NEUE!</span>
         <span class="toggle">△</span>
       </div>
       <div class="section-content items">
         <div class="item">
-          <div class="item-title">📋 Neue Bewerbung!</div>
-          <div class="item-detail">Alea Kalbus — Minijob Service (27.05. 13:02)</div>
-          <div class="item-detail"><span class="badge warning">ACTION: Review erforderlich</span></div>
+          <div class="item-title">📋 BEWERBUNG #1: Alea Kalbus</div>
+          <div class="item-detail">Email: alea.kalbus@gmx.de</div>
+          <div class="item-detail">Position: Minijobberin im Service</div>
+          <div class="item-detail">Quelle: Instagram (Verstärkung gesucht)</div>
+          <div class="item-detail">Eingegangen: 27.05.2026 13:02</div>
+          <div class="item-detail"><span class="badge warning">ACTION: Review + Antwort erforderlich</span></div>
+        </div>
+        <div class="item">
+          <div class="item-title">📋 ANFRAGE #2: Eve Johanna (NEU!)</div>
+          <div class="item-detail">Email: evejohanna@web.de</div>
+          <div class="item-detail">Anfrage: Aushilfe / Teamverstärkung</div>
+          <div class="item-detail">Zitat: "Ich habe auf Instagram gesehen, dass Sie aktuell nicht suchen, wollte mein Glück aber dennoch versuchen..."</div>
+          <div class="item-detail">Eingegangen: 28.05.2026 10:50 (HEUTE!)</div>
+          <div class="item-detail"><span class="badge warning">ACTION: Höflich antworten (aktuell nicht gesucht)</span></div>
         </div>
       </div>
     </div>
-
+ 
     <!-- STATISTIK -->
     <div class="section">
       <div class="section-header">
         <span class="icon">📈</span>
-        <span class="title">Statistik (24h)</span>
+        <span class="title">Statistik & Überblick</span>
         <span class="toggle">△</span>
       </div>
       <div class="section-content summary">
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-number">12</div>
-            <div class="stat-label">Neue Reservierungen</div>
+            <div class="stat-number">16</div>
+            <div class="stat-label">Reservierungen</div>
           </div>
           <div class="stat-card">
-            <div class="stat-number">95+</div>
+            <div class="stat-number">110+</div>
             <div class="stat-label">Gäste gebucht</div>
           </div>
           <div class="stat-card">
-            <div class="stat-number">1</div>
-            <div class="stat-label">Stornierung</div>
+            <div class="stat-number">2</div>
+            <div class="stat-label">Bewerbungen</div>
           </div>
           <div class="stat-card">
-            <div class="stat-number">EUR 2.665</div>
-            <div class="stat-label">Einnahmen</div>
+            <div class="stat-number">EUR 1.300</div>
+            <div class="stat-label">Zahlungen 48h</div>
           </div>
         </div>
-
-        <h3>Kurze Zusammenfassung:</h3>
+ 
+        <h3>Schnell-Übersicht:</h3>
         <div class="item" style="background: rgba(24,95,165,0.05); border-left: 4px solid var(--primary); margin-top: 12px;">
-          <div class="item-detail">📅 <strong>Reservierungen:</strong> 12 neue | 95+ Gäste | 1 Stornierung (Nadine) | VOLLGEBUCHT!</div>
-          <div class="item-detail">💰 <strong>Finanzen:</strong> EUR 2.664,50 SumUp + Standardzahlungen</div>
-          <div class="item-detail">📦 <strong>Lieferanten:</strong> CITTI Bestellung Fr 29.05 | Logistik OK</div>
-          <div class="item-detail">👤 <strong>HR:</strong> Bewerbung Alea Kalbus (Minijob Service)</div>
-          <div class="item-detail">🚨 <strong>ALERT:</strong> Lexware Integration Fehler — Elise muss fixen!</div>
+          <div class="item-detail">📅 <strong>Buchungen:</strong> 16 gesamt | 110+ Gäste | Mai-Juni VOLLGEBUCHT</div>
+          <div class="item-detail">💼 <strong>HR:</strong> 2 neue Anfragen (Alea + Eve Johanna)</div>
+          <div class="item-detail">📦 <strong>Lieferanten:</strong> 2x CITTI Fr 29.05 | CHEFS CULINAR ✓ bezahlt</div>
+          <div class="item-detail">💳 <strong>Finanzen:</strong> EUR 1.300+ Zahlungen | EUR 19,99 fällig 29.05</div>
+          <div class="item-detail">🚨 <strong>ALERT:</strong> Lexware Integration noch fehlgeschlagen!</div>
+          <div class="item-detail">🎂 <strong>EVENTS:</strong> Ina Weidenmüller Geburtstag (05.06) + A.S. Roberts Vorbestellung (31.05)</div>
         </div>
       </div>
     </div>
-
-    <!-- TRENDS -->
+ 
+    <!-- SOFORT-AKTIONEN -->
     <div class="section">
       <div class="section-header">
-        <span class="icon">📊</span>
-        <span class="title">Trends & Muster</span>
+        <span class="icon">✅</span>
+        <span class="title">Sofort-Aktionen (Priorität)</span>
         <span class="toggle">△</span>
       </div>
       <div class="section-content items">
         <div class="item">
-          <div class="item-title">🚀 BOOKING EXPLOSION!</div>
-          <div class="item-detail">12 neue Reservierungen in 24h</div>
-          <div class="item-detail">95+ Gäste gebucht — VOLLBOOK für nächste 4 Wochen</div>
+          <div class="item-title">🔴 PRIORITÄT 1: LEXWARE FIX</div>
+          <div class="item-detail">→ Elise: Lexware Integration debuggen (noch nicht behoben!)</div>
+          <div class="item-detail">→ Finom Support kontaktieren wenn nötig</div>
+          <div class="item-detail">→ Status: WEITERHIN OFFEN</div>
         </div>
         <div class="item">
-          <div class="item-title">❌ Erste Stornierung</div>
-          <div class="item-detail">Nadine Hoffmann storniert (Fr 29.05 09:00, 2P)</div>
-          <div class="item-detail">Aber: Lisa Wagner bucht die 09:15 slot = gut kompensiert</div>
+          <div class="item-title">🟠 PRIORITÄT 2: 2x BEWERBUNGEN BEARBEITEN</div>
+          <div class="item-detail">→ Alea Kalbus: Interview/Zusage/Ablehnung</div>
+          <div class="item-detail">→ Eve Johanna: Höfliche Absage (aktuell nicht gesucht)</div>
         </div>
         <div class="item">
-          <div class="item-title">💼 HR Activity</div>
-          <div class="item-detail">Bewerbung Alea Kalbus eingegangen</div>
-          <div class="item-detail">→ Service Minijob gesucht (aus Instagram-Post)</div>
+          <div class="item-title">🟡 PRIORITÄT 3: 2x CITTI LIEFERUNGEN KOORDINIEREN</div>
+          <div class="item-detail">→ Bestellung 393883 + 396925 beide Fr 29.05</div>
+          <div class="item-detail">→ Wareneingangsprüfung planen (2x am gleichen Tag!)</div>
+        </div>
+        <div class="item">
+          <div class="item-title">🟢 PRIORITÄT 4: SPECIAL EVENTS VORBEREITEN</div>
+          <div class="item-detail">→ A.S. Roberts Vorbestellung (31.05): Zutaten checken</div>
+          <div class="item-detail">→ Ina Weidenmüller Geburtstag (05.06): Special touch planen</div>
         </div>
       </div>
     </div>
-
+ 
   </div>
   
   <div class="footer">
-    <p style="margin: 0; font-size: 12px;">📋 Management Briefing — LIVE SCAN<br>
-    <span style="font-size: 11px;">pausenplaetzchen.de • 27.05.2026 22:47</span></p>
+    <p style="margin: 0; font-size: 12px;">📋 PausenPlätzchen Management Briefing — LIVE UPDATE<br>
+    <span style="font-size: 11px;">pausenplaetzchen.de • 28. Mai 2026 | Neue Bewerbungen + CITTI Update</span></p>
   </div>
 </div>
-
+ 
 <script>
 document.querySelectorAll('.section-header').forEach(header => {
   header.addEventListener('click', function() {
@@ -590,7 +573,7 @@ document.querySelectorAll('.section-header').forEach(header => {
     section.classList.toggle('open');
   });
 });
-
+ 
 window.addEventListener('load', () => {
   const firstSection = document.querySelector('.section');
   if (firstSection && !firstSection.classList.contains('open')) {
